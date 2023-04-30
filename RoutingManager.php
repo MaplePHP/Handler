@@ -90,7 +90,10 @@ class RoutingManager implements RoutingManagerInterface
      * @return mixed
      */
     public function getController() {
-        return $this->controller;
+        return [
+            "controller" => $this->controller,
+            "method" => $this->method
+        ];
     }
 
     /**
@@ -100,6 +103,7 @@ class RoutingManager implements RoutingManagerInterface
     public function getMiddleware($data) {
         return [
             "controller" => $this->controller,
+            "method" => $this->method,
             "data" => $data
         ];
     }

@@ -245,7 +245,7 @@ class RouterDispatcher implements RouterDispatcherInterface
                     $inst = $r();
                     $this->dispatcherNest($route, $inst);
                 } else {
-                    $route->addRoute($r->getMethod(), $r->getPattern(), $r->getController());
+                   $route->addRoute($r->getMethod(), $r->getPattern(), $r->getController());
                 }
             }
         };
@@ -282,6 +282,7 @@ class RouterDispatcher implements RouterDispatcherInterface
     {
         $dispatcher = $this->registerDispatcher();
         $routeInfo = $dispatcher->dispatch($this->method, $this->dispatchPath);
+
 
         if($routeInfo[0] === Dispatcher::FOUND) {
             $this->url = $this->setUrl($routeInfo[2]);
@@ -329,7 +330,6 @@ class RouterDispatcher implements RouterDispatcherInterface
         if(!is_null($inst['pattern'])) {
             $route->addGroup($inst['pattern'], function (RouteCollector $route) use($inst) {
                 foreach($inst['router']->router as $g) {
-
                     if(($g instanceof RoutingManager)) {
                         $route->addRoute($g->getMethod(), $g->getPattern(), $g->getMiddleware($inst['data']));
 
