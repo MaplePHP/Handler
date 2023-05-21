@@ -116,6 +116,14 @@ class Emitter
         $size = $stream->getSize();
         if($size) $this->response = $this->response->withHeader('Content-Length', $size);
 
+        $this->response = $this->response->withHeaders([
+            "Cache-Control" => "max-age=3600, must-revalidate, private",
+            "Expires" => date("D, d M Y H:i:s", time()+3600)." GMT"
+        ]);
+
+        
+        
+
         $this->response->createHeaders();
 
         // Detached Body from a HEAD request method but keep the meta data intact.
