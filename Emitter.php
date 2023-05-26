@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace PHPFuse\Emitter;
+namespace PHPFuse\Handler;
 
 use PHPFuse\Http\Interfaces\ResponseInterface;
 use PHPFuse\Http\Interfaces\RequestInterface;
-use PHPFuse\Emitter\Exceptions\EmitterException;
-use PHPFuse\Emitter\ErrorHandler;
+use PHPFuse\Handler\Exceptions\EmitterException;
+use PHPFuse\Handler\ErrorHandler;
 use PHPFuse\Container\Interfaces\ContainerInterface;
 use PHPFuse\Output\SwiftRender;
 

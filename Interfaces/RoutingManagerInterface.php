@@ -1,6 +1,6 @@
 <?php
 
-namespace PHPFuse\Emitter\Interfaces;
+namespace PHPFuse\Handler\Interfaces;
 
 
 interface RoutingManagerInterface

@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace PHPFuse\Emitter;
+namespace PHPFuse\Handler;
 
 use PHPFuse\Http\Interfaces\ResponseInterface;
 use PHPFuse\Http\Interfaces\RequestInterface;
-use PHPFuse\Emitter\Interfaces\RouterDispatcherInterface;
-use PHPFuse\Emitter\RoutingManager;
+use PHPFuse\Handler\Interfaces\RouterDispatcherInterface;
+use PHPFuse\Handler\RoutingManager;
 use PHPFuse\Container\Reflection;
 
 use PHPFuse\Helpers\Interfaces\UrlInterface;

@@ -1,6 +1,6 @@
 <?php
 
-namespace PHPFuse\Emitter\Interfaces;
+namespace PHPFuse\Handler\Interfaces;
 
 use PHPFuse\Http\Interfaces\ResponseInterface;
 use PHPFuse\Http\Interfaces\RequestInterface;

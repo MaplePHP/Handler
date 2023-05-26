@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace PHPFuse\Emitter;
+namespace PHPFuse\Handler;
 
-use PHPFuse\Emitter\Interfaces\RoutingManagerInterface;
+use PHPFuse\Handler\Interfaces\RoutingManagerInterface;
 use InvalidArgumentException;
 
 class RoutingManager implements RoutingManagerInterface

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace PHPFuse\Emitter;
+namespace PHPFuse\Handler;
 
 class ErrorHandler
 {
