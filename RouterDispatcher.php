@@ -289,7 +289,7 @@ class RouterDispatcher implements RouterDispatcherInterface
             $call($routeInfo[0], $this->response, $this->request, $this->url);
 
             ob_start();
-            if(is_array($routeInfo[1])) {
+            if(is_array($routeInfo[1]['controller'])) {
                 
 
                 $this->dispatchMiddleware(($routeInfo[1]['data'] ?? NULL), function() use(&$response, $routeInfo) {
@@ -305,7 +305,7 @@ class RouterDispatcher implements RouterDispatcherInterface
                 });
 
             } else {
-                $response = $routeInfo[1]($this->response, $this->request);
+                $response = $routeInfo[1]['controller']($this->response, $this->request);
             }
 
             $this->buffer = ob_get_clean();

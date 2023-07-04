@@ -18,7 +18,8 @@ class Emitter
     private $container;
     private $view;
     private $buffer;
-    private $attr;
+    private $stamp;
+    private $cacheDefaultTtl = 0;
 
     private $isGzipped = false;
     private $isBuffer = false;
@@ -35,11 +36,21 @@ class Emitter
         } else {
             $this->view = $this->container->get("view");
         }
+
+        $this->view->setContainer($this->container);
     }
 
     /**
-     * GEt 
-     * @return [type] [description]
+     * Se a default TTL cache save value (default 0)
+     * @param int $ttl In seconds
+     */
+    function setDefaultCacheTtl(int $ttl) {
+    	$this->cacheDefaultTtl = $ttl;
+    }
+
+    /**
+     * Get SwiftRender instance
+     * @return SwiftRender
      */
     function view(): SwiftRender 
     {
@@ -77,12 +88,21 @@ class Emitter
                 return $this->view->index()->get([
                     "statusCode" => $this->response->getStatusCode(),
                     "phraseMessage" => $this->response->getReasonPhrase(),
+                    "description" => $this->response->getDescription(),
                     "errorMessage" => $this->errorHandlerMsg,
                     "container" => $this->container
                 ]);
             }
         }
         return $this->view->buffer()->get();
+    }
+
+
+    private function getStamp() {
+    	if(is_null($this->stamp)) {
+    		$this->stamp = ($this->container->has("nonce")) ? $this->container->get("nonce") : time();
+    	}
+    	return $this->stamp;
     }
 
     /**
@@ -116,14 +136,20 @@ class Emitter
         $size = $stream->getSize();
         if($size) $this->response = $this->response->withHeader('Content-Length', $size);
 
-        $this->response = $this->response->withHeaders([
-            "Cache-Control" => "max-age=3600, must-revalidate, private",
-            "Expires" => date("D, d M Y H:i:s", time()+3600)." GMT"
-        ]);
+        // Set cache control if do not exist
+        if(!$this->response->hasHeader("Cache-Control")) {
+        	if($this->cacheDefaultTtl > 0) {
+        		$this->response = $this->response->setCache($this->getStamp(), $this->cacheDefaultTtl);
+        	} else {
+        		// Set headers to clear cache and do not save cache
+        		$this->response = $this->response->clearCache();
+        	}
+        }
 
-        
-        
+        // Expire the cache at the date (if you update the databse then pass the update date maybee)
+        //$this->response = $this->response->clearCacheAt(time());
 
+    	$this->response = $this->response->withHeader("X-Powered-By", 'Fuse-'.$this->getStamp());
         $this->response->createHeaders();
 
         // Detached Body from a HEAD request method but keep the meta data intact.
