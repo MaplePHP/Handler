@@ -10,8 +10,8 @@ use PHPFuse\Handler\Interfaces\RouterDispatcherInterface;
 use PHPFuse\Handler\RoutingManager;
 use PHPFuse\Container\Reflection;
 
-use PHPFuse\Helpers\Interfaces\UrlInterface;
-use PHPFuse\Helpers\Url;
+use PHPFuse\Http\Interfaces\UrlInterface;
+use PHPFuse\Http\Url;
 
 use FastRoute\Dispatcher;
 use FastRoute\RouteCollector;

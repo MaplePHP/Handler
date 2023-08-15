@@ -4,7 +4,7 @@ namespace PHPFuse\Handler\Interfaces;
 
 use PHPFuse\Http\Interfaces\ResponseInterface;
 use PHPFuse\Http\Interfaces\RequestInterface;
-use PHPFuse\Helpers\Interfaces\UrlInterface;
+use PHPFuse\Http\Interfaces\UrlInterface;
 
 interface RouterDispatcherInterface
 {
