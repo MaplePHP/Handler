@@ -105,6 +105,8 @@ class Emitter
     	return $this->stamp;
     }
 
+    
+
     /**
      * Build a client response right for all the PSR parameters given 
      * @param  ResponseInterface $response
@@ -120,6 +122,7 @@ class Emitter
         if(!is_null($this->buffer)) $stream->write($this->buffer);
         $responseBody = $this->createResponse();
 
+
         //Accurate gzip implementation (major improvment for  the apps preformance and load speed)
         if(($acceptEnc = $this->request->getHeader("Accept-Encoding")) && strpos($acceptEnc, 'gzip') !== false) {
             $responseBody = gzencode($responseBody, 9, FORCE_GZIP);
@@ -134,22 +137,20 @@ class Emitter
         }
 
         $size = $stream->getSize();
-        if($size) $this->response = $this->response->withHeader('Content-Length', $size);
 
-        // Set cache control if do not exist
-        if(!$this->response->hasHeader("Cache-Control")) {
-        	if($this->cacheDefaultTtl > 0) {
-        		$this->response = $this->response->setCache($this->getStamp(), $this->cacheDefaultTtl);
-        	} else {
-        		// Set headers to clear cache and do not save cache
-        		$this->response = $this->response->clearCache();
-        	}
+        if($size) {
+            $this->response = $this->response->withHeader('Content-Length', $size);
+            // Set cache control if do not exist
+            if(!$this->response->hasHeader("Cache-Control")) {
+            	if($this->cacheDefaultTtl > 0) {
+            		$this->response = $this->response->setCache($this->getStamp(), $this->cacheDefaultTtl);
+            	}
+            }
         }
-
-        // Expire the cache at the date (if you update the databse then pass the update date maybee)
-        //$this->response = $this->response->clearCacheAt(time());
-
+        
     	$this->response = $this->response->withHeader("X-Powered-By", 'Fuse-'.$this->getStamp());
+
+        // Will pre execute above headers (Can only be triggered once per instance)
         $this->response->createHeaders();
 
         // Detached Body from a HEAD request method but keep the meta data intact.
@@ -158,8 +159,8 @@ class Emitter
             $stream->write("");
         }
 
-        $statusLine = sprintf('HTTP/%s %s %s', $this->response->getProtocolVersion(), $this->response->getStatusCode(), $this->response->getReasonPhrase());
-        header($statusLine, true, $this->response->getStatusCode());
+        // Will execute all headers if not already created AND execute the status line header
+        $this->response->executeHeaders();
 
         if($stream->isSeekable()) {
             $stream->seek(0);

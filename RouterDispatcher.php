@@ -282,13 +282,12 @@ class RouterDispatcher implements RouterDispatcherInterface
     {
         $dispatcher = $this->registerDispatcher();
         $routeInfo = $dispatcher->dispatch($this->method, $this->dispatchPath);
-
-
+        
         if($routeInfo[0] === Dispatcher::FOUND) {
             $this->url = $this->setUrl($routeInfo[2]);
             $call($routeInfo[0], $this->response, $this->request, $this->url);
 
-            ob_start();
+            //ob_start();
             if(is_array($routeInfo[1]['controller'])) {
                 
 
@@ -302,20 +301,25 @@ class RouterDispatcher implements RouterDispatcherInterface
                     } else {
                         $response = $controller($this->response, $this->request);
                     }
+
+                    if($response instanceof ResponseInterface) $this->response = $response;
+
                 });
 
             } else {
                 $response = $routeInfo[1]['controller']($this->response, $this->request);
             }
 
-            $this->buffer = ob_get_clean();
+            //$this->buffer = ob_get_clean();
             
         } else {
             $response = $call($routeInfo[0], $this->response, $this->request, NULL);
         }
 
-
         if($response instanceof ResponseInterface) $this->response = $response;
+
+
+
         return $this->response;
     }
 
