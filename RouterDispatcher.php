@@ -19,8 +19,7 @@ use FastRoute\RouteCollector;
 
 class RouterDispatcher implements RouterDispatcherInterface
 {
-   
-
+    
     public const FOUND = Dispatcher::FOUND;
     public const NOT_FOUND = Dispatcher::NOT_FOUND;
     public const METHOD_NOT_ALLOWED = Dispatcher::METHOD_NOT_ALLOWED;
@@ -37,7 +36,7 @@ class RouterDispatcher implements RouterDispatcherInterface
     private $method;
 
     static private $middleware;
-
+    
     /**
      * Router Dispatcher, Used to make it easier to change out router library
      */
