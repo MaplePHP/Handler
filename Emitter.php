@@ -99,9 +99,7 @@ class Emitter
 
 
     private function getStamp() {
-    	if(is_null($this->stamp)) {
-    		$this->stamp = ($this->container->has("nonce")) ? $this->container->get("nonce") : time();
-    	}
+    	if(is_null($this->stamp)) $this->stamp = time();
     	return $this->stamp;
     }
 
@@ -135,20 +133,19 @@ class Emitter
             if($stream->isSeekable()) $stream->seek(0);
             $stream->write($responseBody);
         }
-
         $size = $stream->getSize();
 
         if($size) {
             $this->response = $this->response->withHeader('Content-Length', $size);
             // Set cache control if do not exist
             if(!$this->response->hasHeader("Cache-Control")) {
-            	if($this->cacheDefaultTtl > 0) {
-            		$this->response = $this->response->setCache($this->getStamp(), $this->cacheDefaultTtl);
-            	}
+                // Clear cache on dynamic content is a good standard to make sure that no sensitive content will be cached.
+                $this->response = $this->response->clearCache();
+            	//if($this->cacheDefaultTtl > 0) $this->response = $this->response->setCache($this->getStamp(), $this->cacheDefaultTtl);
             }
         }
         
-    	$this->response = $this->response->withHeader("X-Powered-By", 'Fuse-'.$this->getStamp());
+    	//$this->response = $this->response->withHeader("X-Powered-By", 'Fuse-'.$this->getStamp());
 
         // Will pre execute above headers (Can only be triggered once per instance)
         $this->response->createHeaders();
@@ -167,7 +164,6 @@ class Emitter
             echo $stream->read($size);
         }
     }
-
 
     /**
      * Makes error handling easy 
