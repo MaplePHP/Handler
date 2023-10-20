@@ -102,9 +102,7 @@ class Emitter
     	if(is_null($this->stamp)) $this->stamp = time();
     	return $this->stamp;
     }
-
     
-
     /**
      * Build a client response right for all the PSR parameters given 
      * @param  ResponseInterface $response
@@ -122,7 +120,7 @@ class Emitter
 
 
         //Accurate gzip implementation (major improvment for  the apps preformance and load speed)
-        if(($acceptEnc = $this->request->getHeader("Accept-Encoding")) && strpos($acceptEnc, 'gzip') !== false) {
+        if(($acceptEnc = $this->request->getHeaderLine("Accept-Encoding")) && strpos($acceptEnc, 'gzip') !== false) {
             $responseBody = gzencode($responseBody, 9, FORCE_GZIP);
             $this->response = $this->response->withHeader('Content-Encoding', "gzip");
             $this->isGzipped = true;
