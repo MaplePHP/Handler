@@ -239,6 +239,7 @@ class RouterDispatcher implements RouterDispatcherInterface
     function dispatcherCallback(): callable 
     {
         return function(RouteCollector $route) {
+
             foreach($this->router as $r) {
                 if(is_callable($r)) {
                     $inst = $r();
@@ -266,6 +267,11 @@ class RouterDispatcher implements RouterDispatcherInterface
                 ]);
             }            
         }
+        return $this->dispatcher;
+    }
+
+    public function getDispatcher()
+    {
         return $this->dispatcher;
     }
 
