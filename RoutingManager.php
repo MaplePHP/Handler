@@ -1,4 +1,5 @@
-<?php 
+<?php
+
 
 declare(strict_types=1);
 
@@ -9,8 +10,6 @@ use InvalidArgumentException;
 
 class RoutingManager implements RoutingManagerInterface
 {
-
-
     private $method;
     private $pattern;
     private $controller;
@@ -21,8 +20,8 @@ class RoutingManager implements RoutingManagerInterface
      * @param string $pattern
      * @param string|array $controller
      */
-    function __construct($method, $pattern, $controller)
-    {   
+    public function __construct($method, $pattern, $controller)
+    {
         $this->setMethod($method);
         $this->pattern = $pattern;
         $this->setController($controller);
@@ -33,10 +32,12 @@ class RoutingManager implements RoutingManagerInterface
      * Sets a valid request Method
      * @param void
      */
-    protected function setMethod($method): void 
+    protected function setMethod($method): void
     {
-        if(is_array($method)) {
-            if(count($method) <= 0) throw new InvalidArgumentException("Method array can not be empty", 1);
+        if (is_array($method)) {
+            if (count($method) <= 0) {
+                throw new InvalidArgumentException("Method array can not be empty", 1);
+            }
             $method = array_map('strtoupper', $method);
         } else {
             $method = strtoupper($method);
@@ -45,11 +46,11 @@ class RoutingManager implements RoutingManagerInterface
         $this->method = $method;
     }
 
-     /**
-     * Sets a valid Pattern
-     * @param void
-     */
-    protected function setPattern(string $pattern): void 
+    /**
+    * Sets a valid Pattern
+    * @param void
+    */
+    protected function setPattern(string $pattern): void
     {
         $this->pattern = $pattern;
     }
@@ -58,12 +59,18 @@ class RoutingManager implements RoutingManagerInterface
      * Sets a valid request Controller
      * @param void
      */
-    protected function setController($controller): void 
+    protected function setController($controller): void
     {
         $isArr = false;
-        if(is_string($controller)) $controller = [$controller];
-        if(!($isArr = is_array($controller)) && !is_callable($controller)) throw new InvalidArgumentException("Controller needs to be string or array", 1);
-        if($isArr && count($controller) <= 0) throw new InvalidArgumentException("Method array can not be empty", 1);
+        if (is_string($controller)) {
+            $controller = [$controller];
+        }
+        if (!($isArr = is_array($controller)) && !is_callable($controller)) {
+            throw new InvalidArgumentException("Controller needs to be string or array", 1);
+        }
+        if ($isArr && count($controller) <= 0) {
+            throw new InvalidArgumentException("Method array can not be empty", 1);
+        }
         $this->controller = $controller;
     }
 
@@ -71,7 +78,7 @@ class RoutingManager implements RoutingManagerInterface
      * Get method
      * @return string|array
      */
-    public function getMethod() 
+    public function getMethod()
     {
         return $this->method;
     }
@@ -80,7 +87,7 @@ class RoutingManager implements RoutingManagerInterface
      * Get Pattern
      * @return string
      */
-    public function getPattern(): string 
+    public function getPattern(): string
     {
         return $this->pattern;
     }
@@ -89,7 +96,8 @@ class RoutingManager implements RoutingManagerInterface
      * Get Controller
      * @return mixed
      */
-    public function getController() {
+    public function getController()
+    {
         return [
             "controller" => $this->controller,
             "method" => $this->method
@@ -100,7 +108,8 @@ class RoutingManager implements RoutingManagerInterface
      * Get Controller
      * @return mixed
      */
-    public function getMiddleware($data) {
+    public function getMiddleware($data)
+    {
         return [
             "controller" => $this->controller,
             "method" => $this->method,

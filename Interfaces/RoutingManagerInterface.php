@@ -2,20 +2,17 @@
 
 namespace PHPFuse\Handler\Interfaces;
 
-
 interface RoutingManagerInterface
 {
-
-
     /**
      * Start Manager a Route
-     * @param mixed $method    
-     * @param mixed $pattern   
+     * @param mixed $method
+     * @param mixed $pattern
      * @param mixed $controller
      */
     public function __construct($method, $pattern, $controller);
 
-	/**
+    /**
      * Get method
      * @return string|array
      */
@@ -32,6 +29,4 @@ interface RoutingManagerInterface
      * @return mixed
      */
     public function getController();
-
-    
 }
