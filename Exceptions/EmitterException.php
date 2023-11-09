@@ -1,6 +1,6 @@
 <?php
 
-namespace PHPFuse\Http\Exceptions;
+namespace PHPFuse\Handler\Exceptions;
 
 use ErrorException;
 

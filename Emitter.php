@@ -7,6 +7,7 @@ namespace PHPFuse\Handler;
 
 use PHPFuse\Http\Interfaces\ResponseInterface;
 use PHPFuse\Http\Interfaces\RequestInterface;
+use PHPFuse\Http\Interfaces\StreamInterface;
 use PHPFuse\Handler\Exceptions\EmitterException;
 use PHPFuse\Handler\ErrorHandler;
 use PHPFuse\Container\Interfaces\ContainerInterface;
@@ -19,7 +20,7 @@ class Emitter
     private $container;
     private $view;
     private $buffer;
-    private $stamp;
+    //private $stamp;
     private $cacheDefaultTtl = 0;
 
     private $isGzipped = false;
@@ -101,25 +102,12 @@ class Emitter
     }
 
 
-    private function getStamp()
-    {
-        if (is_null($this->stamp)) {
-            $this->stamp = time();
-        }
-        return $this->stamp;
-    }
-
     /**
-     * Build a client response right for all the PSR parameters given
-     * @param  ResponseInterface $response
-     * @param  RequestInterface  $request
-     * @return void
+     * Will build the Stream
+     * @return StreamInterface
      */
-    public function run(ResponseInterface $response, RequestInterface $request): void
+    private function buildStream(): StreamInterface
     {
-        $this->response = $response;
-        $this->request = $request;
-
         $stream = $this->response->getBody();
         if (!is_null($this->buffer)) {
             $stream->write($this->buffer);
@@ -141,6 +129,22 @@ class Emitter
             }
             $stream->write($responseBody);
         }
+
+        return $stream;
+    }
+
+    /**
+     * Build a client response right for all the PSR parameters given
+     * @param  ResponseInterface $response
+     * @param  RequestInterface  $request
+     * @return void
+     */
+    public function run(ResponseInterface $response, RequestInterface $request): void
+    {
+        $this->response = $response;
+        $this->request = $request;
+
+        $stream = $this->buildStream();
         $size = $stream->getSize();
 
         if ($size) {
@@ -150,16 +154,9 @@ class Emitter
                 // Clear cache on dynamic content is a good standard to make sure
                 // that no sensitive content will be cached.
                 $this->response = $this->response->clearCache();
-                /*
-                if($this->cacheDefaultTtl > 0) {
-                    $this->response = $this->response->setCache($this->getStamp(), $this->cacheDefaultTtl);
-                }
-                 */
             }
         }
-
-        //$this->response = $this->response->withHeader("X-Powered-By", 'Fuse-'.$this->getStamp());
-
+        
         // Will pre execute above headers (Can only be triggered once per instance)
         $this->response->createHeaders();
 

@@ -8,12 +8,11 @@ namespace PHPFuse\Handler;
 use PHPFuse\Http\Interfaces\ResponseInterface;
 use PHPFuse\Http\Interfaces\RequestInterface;
 use PHPFuse\Handler\Interfaces\RouterDispatcherInterface;
+use PHPFuse\Handler\Exceptions\EmitterException;
+use PHPFuse\Http\Interfaces\UrlInterface;
 use PHPFuse\Handler\RoutingManager;
 use PHPFuse\Container\Reflection;
-
-use PHPFuse\Http\Interfaces\UrlInterface;
 use PHPFuse\Http\Url;
-
 use FastRoute\Dispatcher;
 use FastRoute\RouteCollector;
 
@@ -76,7 +75,7 @@ class RouterDispatcher implements RouterDispatcherInterface
         return $this->url;
     }
 
-    public function setUrl(array $param = array(), string $dir = "")
+    public function setUrl(array $param = array())
     {
         return new Url($this->request, $param);
     }
@@ -131,18 +130,18 @@ class RouterDispatcher implements RouterDispatcherInterface
      * Callable: Routes to be binded to pattern or middelwares
      * Pattern: Routes binded to pattern
      * Array: Middelwares
-     * @param  mixed  $a Callable/Pattern
-     * @param  mixed  $b Callable/array
-     * @param  array  $c array
+     * @param  mixed  $arg1 Callable/Pattern
+     * @param  mixed  $arg2 Callable/array
+     * @param  array  $arg3 array
      * @return void
      */
-    public function group($a, $b, $c = array()): void
+    public function group($arg1, $arg2, $arg3 = array()): void
     {
         $inst = clone $this;
         $inst->router = array();
-        $pattern = (is_string($a)) ? $a : null;
-        $call = ($pattern) ? $b : $a;
-        $data = ($pattern) ? $c : $b;
+        $pattern = (is_string($arg1)) ? $arg1 : null;
+        $call = ($pattern) ? $arg2 : $arg1;
+        $data = ($pattern) ? $arg3 : $arg2;
 
         if (!is_array($data)) {
             $data = [];
@@ -357,7 +356,7 @@ class RouterDispatcher implements RouterDispatcherInterface
                 }
             });
         } else {
-            foreach ($inst['router']->router as $k => $g) {
+            foreach ($inst['router']->router as $g) {
                 if (($g instanceof RoutingManager)) {
                     $route->addRoute($g->getMethod(), $g->getPattern(), $g->getMiddleware($inst['data']));
                 } else {
@@ -379,29 +378,29 @@ class RouterDispatcher implements RouterDispatcherInterface
      */
     protected function dispatchMiddleware(?array $data, $call): void
     {
-        $middleware = array();
+        //$middleware = array();
         if (!is_null($data)) {
-            foreach ($data as $c) {
-                $d = $this->getClass($c);
-                if (!isset(self::$middleware[$d[0]])) {
-                    $reflect = new Reflection($d[0]);
-                    self::$middleware[$d[0]] = $reflect->dependencyInjector();
+            foreach ($data as $class) {
+                $classData = $this->getClass($class);
+                if (!isset(self::$middleware[$classData[0]])) {
+                    $reflect = new Reflection($classData[0]);
+                    self::$middleware[$classData[0]] = $reflect->dependencyInjector();
                 }
-                $r = self::$middleware[$d[0]]->before($this->response, $this->request);
-                if (!is_null($d[1])) {
-                    $r = self::$middleware[$d[0]]->{$d[1]}($this->response, $this->request);
+                $response = self::$middleware[$classData[0]]->before($this->response, $this->request);
+                if (!is_null($classData[1])) {
+                    $response = self::$middleware[$classData[0]]->{$classData[1]}($this->response, $this->request);
                 } // Is method set:
-                if ($r instanceof ResponseInterface) {
-                    $this->response = $r;
+                if ($response instanceof ResponseInterface) {
+                    $this->response = $response;
                 }
             }
         }
         $call(); // Possible controller data
         if (is_array(self::$middleware)) {
             foreach (self::$middleware as $m) {
-                $r = $m->after($this->response, $this->request);
-                if ($r instanceof ResponseInterface) {
-                    $this->response = $r;
+                $response = $m->after($this->response, $this->request);
+                if ($response instanceof ResponseInterface) {
+                    $this->response = $response;
                 }
             }
         }
