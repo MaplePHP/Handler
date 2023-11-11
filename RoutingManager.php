@@ -29,9 +29,9 @@ class RoutingManager implements RoutingManagerInterface
 
     /**
      * Sets a valid request Method
-     * @param void
+     * @param string|array
      */
-    protected function setMethod($method): void
+    protected function setMethod(string|array $method): void
     {
         if (is_array($method)) {
             if (count($method) <= 0) {
@@ -56,18 +56,18 @@ class RoutingManager implements RoutingManagerInterface
 
     /**
      * Sets a valid request Controller
-     * @param void
+     * @param string|array|callable $controller
      */
-    protected function setController($controller): void
+    protected function setController(string|array|callable $controller): void
     {
-        $isArr = false;
+        $_isArr = false;
         if (is_string($controller)) {
             $controller = [$controller];
         }
-        if (!($isArr = is_array($controller)) && !is_callable($controller)) {
+        if (!($_isArr = is_array($controller)) && !is_callable($controller)) {
             throw new InvalidArgumentException("Controller needs to be string or array", 1);
         }
-        if ($isArr && count($controller) <= 0) {
+        if ($_isArr && count($controller) <= 0) {
             throw new InvalidArgumentException("Method array can not be empty", 1);
         }
         $this->controller = $controller;
@@ -77,7 +77,7 @@ class RoutingManager implements RoutingManagerInterface
      * Get method
      * @return string|array
      */
-    public function getMethod()
+    public function getMethod(): string|array
     {
         return $this->method;
     }
@@ -93,9 +93,9 @@ class RoutingManager implements RoutingManagerInterface
 
     /**
      * Get Controller
-     * @return mixed
+     * @return array
      */
-    public function getController()
+    public function getController(): array
     {
         return [
             "controller" => $this->controller,
@@ -105,9 +105,9 @@ class RoutingManager implements RoutingManagerInterface
 
     /**
      * Get Controller
-     * @return mixed
+     * @return array
      */
-    public function getMiddleware($data)
+    public function getMiddleware($data): array
     {
         return [
             "controller" => $this->controller,

@@ -286,6 +286,7 @@ class RouterDispatcher implements RouterDispatcherInterface
 
     /**
      * Dispatch results
+     * @param  callable  $call
      * @return void
      */
     public function dispatch(callable $call)
@@ -407,10 +408,10 @@ class RouterDispatcher implements RouterDispatcherInterface
 
     /**
      * Extract class and mthod from argument
-     * @param  string|arrat $classMethod
+     * @param  string|array $classMethod
      * @return array
      */
-    protected function getClass($classMethod): array
+    protected function getClass(string|array $classMethod): array
     {
         $class = $classMethod;
         $method = null;
