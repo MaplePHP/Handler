@@ -1,6 +1,5 @@
 <?php
 
-
 declare(strict_types=1);
 
 namespace PHPFuse\Handler;
@@ -82,7 +81,7 @@ class ErrorHandler
     {
         $msg = $this->getMessage($message, $file, $line);
         $hasError = in_array($number, $this->errorLevels);
-        $checksum = crc32($message.basename($file).$line);
+        $checksum = crc32($message . basename($file) . $line);
 
         if (!is_null($this->handler)) {
             $handler = $this->handler;

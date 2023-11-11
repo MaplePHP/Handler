@@ -1,6 +1,5 @@
 <?php
 
-
 declare(strict_types=1);
 
 namespace PHPFuse\Handler;
@@ -156,7 +155,7 @@ class Emitter
                 $this->response = $this->response->clearCache();
             }
         }
-        
+
         // Will pre execute above headers (Can only be triggered once per instance)
         $this->response->createHeaders();
 

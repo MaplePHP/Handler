@@ -1,6 +1,5 @@
 <?php
 
-
 declare(strict_types=1);
 
 namespace PHPFuse\Handler;
@@ -118,7 +117,7 @@ class RouterDispatcher implements RouterDispatcherInterface
         $dir = dirname($this->routerCacheFile);
 
         if (!is_writable($dir)) {
-            throw new EmitterException("Directory (\"{$dir}/\") is not writable. ".
+            throw new EmitterException("Directory (\"{$dir}/\") is not writable. " .
                 "Could not save \"{$this->routerCacheFile}\" file.", 1);
         }
     }
