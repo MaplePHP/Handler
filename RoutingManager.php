@@ -15,11 +15,11 @@ class RoutingManager implements RoutingManagerInterface
 
     /**
      * Start Manager a Route, USED to make it easier to change out router library
-     * @param string|array  $method     (GET, HEAD, POST, PUT, DELETE, CONNECT, OPTIONS, TRACE)
-     * @param string $pattern
-     * @param string|array $controller
+     * @param string|array          $method     (GET, HEAD, POST, PUT, DELETE, CONNECT, OPTIONS, TRACE)
+     * @param string                $pattern
+     * @param string|array|callable $controller
      */
-    public function __construct($method, $pattern, $controller)
+    public function __construct(string|array $method, string $pattern, string|array|callable $controller)
     {
         $this->setMethod($method);
         $this->pattern = $pattern;

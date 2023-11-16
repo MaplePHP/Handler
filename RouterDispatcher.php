@@ -90,7 +90,8 @@ class RouterDispatcher implements RouterDispatcherInterface
 
     /**
      * Change request method to a static method
-     * @param void
+     * @param string $method
+     * @return void
      */
     public function setRequestMethod(string $method): void
     {
@@ -99,7 +100,8 @@ class RouterDispatcher implements RouterDispatcherInterface
 
     /**
      * Set URL router dispatch path
-     * @param void
+     * @param string $path
+     * @return void
      */
     public function setDispatchPath(string $path): void
     {
@@ -107,8 +109,11 @@ class RouterDispatcher implements RouterDispatcherInterface
     }
 
     /**
-     * Set possible full directory path to file
-     * @param void
+     * Cache the router data to a cache file for increased performance.
+     * But remember you need to clear the file if you make router changes!
+     * @param string $cacheFile
+     * @param bool $enableCache (Default true)
+     * @return void
      */
     public function setRouterCacheFile(string $cacheFile, bool $enableCache = true): void
     {
@@ -287,9 +292,9 @@ class RouterDispatcher implements RouterDispatcherInterface
     /**
      * Dispatch results
      * @param  callable  $call
-     * @return void
+     * @return ResponseInterface
      */
-    public function dispatch(callable $call)
+    public function dispatch(callable $call): ResponseInterface
     {
         $dispatcher = $this->registerDispatcher();
         $routeInfo = $dispatcher->dispatch($this->method, $this->dispatchPath);
@@ -308,7 +313,9 @@ class RouterDispatcher implements RouterDispatcherInterface
                     if (isset($select[1])) {
                         $response = $controller->{$select[1]}($this->response, $this->request);
                     } else {
-                        $response = $controller($this->response, $this->request);
+                        if (is_callable($controller)) {
+                            $response = $controller($this->response, $this->request);
+                        }
                     }
 
                     if ($response instanceof ResponseInterface) {
@@ -328,7 +335,9 @@ class RouterDispatcher implements RouterDispatcherInterface
             $this->response = $response;
         }
 
-
+        if (is_null($this->response)) {
+            throw new EmitterException("The response can not be null, it has to be instance of ResponseInterface.", 1);
+        }
 
         return $this->response;
     }
@@ -350,7 +359,7 @@ class RouterDispatcher implements RouterDispatcherInterface
                         if (is_callable($g)) {
                             $newInst = $g();
                             $newInst['data'] = array_merge($inst['data'], $newInst['data']);
-                            $this->dispatcherNest($route, $newInst, true);
+                            $this->dispatcherNest($route, $newInst);
                         }
                     }
                 }
@@ -363,7 +372,7 @@ class RouterDispatcher implements RouterDispatcherInterface
                     if (is_callable($g)) {
                         $newInst = $g();
                         $newInst['data'] = array_merge($inst['data'], $newInst['data']);
-                        $this->dispatcherNest($route, $newInst, true);
+                        $this->dispatcherNest($route, $newInst);
                     }
                 }
             }

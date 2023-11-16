@@ -30,8 +30,7 @@ class ErrorHandler
     public function __construct(
         bool $displayError,
         bool $logError = false,
-        ?string $logErrorFile = null,
-        bool $psrLogger = false
+        ?string $logErrorFile = null
     ) {
         $this->displayError = $displayError;
         $this->logError = $logError;
@@ -48,7 +47,10 @@ class ErrorHandler
             ini_set("error_log", $this->logErrorFile);
         }
 
-        set_error_handler([$this, 'handler']);
+        $handler = call_user_func([$this, 'handler']);
+        if (is_callable($handler)) {
+            set_error_handler($handler);
+        }
     }
 
     public function setMessage(string $message): void
@@ -77,15 +79,23 @@ class ErrorHandler
         return "{$message} in {$file} on line {$line}";
     }
 
-    public function handler($number, $message, $file, $line): void
+    /**
+     * Error handler
+     * @param  int         $number  [description]
+     * @param  string      $message [description]
+     * @param  string|null $file    [description]
+     * @param  int|null    $line    [description]
+     * @param  mixed|null  $context [description]
+     * @return void
+     */
+    public function handler(int $number, string $message, ?string $file = null, ?int $line = null, ?mixed $context = null): void
     {
         $msg = $this->getMessage($message, $file, $line);
         $hasError = in_array($number, $this->errorLevels);
         $checksum = crc32($message . basename($file) . $line);
-
-        if (!is_null($this->handler)) {
-            $handler = $this->handler;
-            $handler($msg, $number, $hasError, $this->displayError, [$number, $message, $file, $line]);
+        $handler = $this->handler;
+        if (is_callable($handler)) {
+            $handler($msg, $number, $hasError, $this->displayError, [$number, $message, $file, $line, $context]);
             if ($this->displayError) {
                 echo "<pre><strong>{$checksum}:</strong> {$msg}</pre>";
             }
@@ -94,8 +104,6 @@ class ErrorHandler
                 echo $msg;
             }
         }
-
-
         if ($this->logError && (!$this->displayError || empty(self::$errorFilter[$checksum]))) {
             error_log("ErrorID: {$checksum}: {$msg}");
             self::$errorFilter[$checksum] = 1;

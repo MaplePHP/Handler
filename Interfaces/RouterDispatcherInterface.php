@@ -20,7 +20,6 @@ interface RouterDispatcherInterface
      */
     public function request(): RequestInterface;
 
-
     /**
      * Get url instance (Use this to add some extra custom URL functionallity upon the PSR UriInterface)
      * @return UrlInterface
@@ -33,16 +32,19 @@ interface RouterDispatcherInterface
      */
     public function getBufferedResponse(): ?string;
 
-
     /**
      * Set URL router dispatch path
-     * @param void
+     * @param string $path
+     * @return void
      */
     public function setDispatchPath(string $path): void;
 
     /**
-     * Set possible full directory path to file
-     * @param void
+     * Cache the router data to a cache file for increased performance.
+     * But remember you need to clear the file if you make router changes!
+     * @param string $cacheFile
+     * @param bool $enableCache (Default true)
+     * @return void
      */
     public function setRouterCacheFile(string $cacheFile, bool $enableCache = true): void;
 
@@ -53,7 +55,7 @@ interface RouterDispatcherInterface
      * @param  string|array $controller
      * @return void
      */
-    public function map($methods, string $pattern, $controller): void;
+    public function map($methods, string $pattern, string|array $controller): void;
 
     /**
      * Should create a shortcut to the Map method
@@ -61,7 +63,7 @@ interface RouterDispatcherInterface
      * @param  string|array $controller
      * @return void
      */
-    public function get(string $pattern, $controller): void;
+    public function get(string $pattern, string|array $controller): void;
 
     /**
      * Should create a shortcut to the Map method
@@ -69,7 +71,7 @@ interface RouterDispatcherInterface
      * @param  string|array $controller
      * @return void
      */
-    public function post(string $pattern, $controller): void;
+    public function post(string $pattern, string|array $controller): void;
 
     /**
      * Should create a shortcut to the Map method
@@ -77,7 +79,7 @@ interface RouterDispatcherInterface
      * @param  string|array $controller
      * @return void
      */
-    public function put(string $pattern, $controller): void;
+    public function put(string $pattern, string|array $controller): void;
 
     /**
      * Should create a shortcut to the Map method
@@ -85,8 +87,7 @@ interface RouterDispatcherInterface
      * @param  string|array $controller
      * @return void
      */
-    public function delete(string $pattern, $controller): void;
-
+    public function delete(string $pattern, string|array $controller): void;
 
     /**
      * The will feed the Dispatcher with routes
@@ -94,10 +95,10 @@ interface RouterDispatcherInterface
      */
     public function dispatcherCallback(): callable;
 
-
     /**
      * Dispatch results
-     * @return void
+     * @param  callable  $call
+     * @return ResponseInterface
      */
     public function dispatch(callable $call);
 }
