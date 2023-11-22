@@ -170,7 +170,7 @@ class Emitter
 
         if ($stream->isSeekable()) {
             $stream->seek(0);
-            echo $stream->read($size);
+            echo $stream->read((int)$size);
         }
     }
 

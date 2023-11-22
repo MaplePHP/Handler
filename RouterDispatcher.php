@@ -168,7 +168,7 @@ class RouterDispatcher implements RouterDispatcherInterface
      * Map a request method and attach controller and it's pattern to RoutingManagerInterface
      * @param  string|array $methods    (GET, HEAD, POST, PUT, DELETE, CONNECT, OPTIONS, TRACE)
      * @param  string $pattern          Example: /about, /{page:about}, /{page:.+}, /{category:[^/]+}, /{id:\d+}
-     * @param  string|array $controller Attach a controller (['Name\Space\ClassName', 'methodName'])
+     * @param  string|array|callable $controller Attach a controller (['Name\Space\ClassName', 'methodName'])
      * @return void
      */
     public function map($methods, string $pattern, $controller): void
@@ -179,7 +179,7 @@ class RouterDispatcher implements RouterDispatcherInterface
     /**
      * Map GET method router and attach controller to it's pattern
      * @param  string $pattern          Example: /about, /{page:about}, /{page:.+}, /{category:[^/]+}, /{id:\d+}
-     * @param  string|array $controller Attach a controller (['Name\Space\ClassName', 'methodName'])
+     * @param  string|array|callable $controller Attach a controller (['Name\Space\ClassName', 'methodName'])
      * @return void
      */
     public function get(string $pattern, $controller): void
@@ -190,7 +190,7 @@ class RouterDispatcher implements RouterDispatcherInterface
     /**
      * Map POST method router and attach controller to it's pattern
      * @param  string $pattern          Example: /about, /{page:about}, /{page:.+}, /{category:[^/]+}, /{id:\d+}
-     * @param  string|array $controller Attach a controller (['Name\Space\ClassName', 'methodName'])
+     * @param  string|array|callable $controller Attach a controller (['Name\Space\ClassName', 'methodName'])
      * @return void
      */
     public function post(string $pattern, $controller): void
@@ -201,7 +201,7 @@ class RouterDispatcher implements RouterDispatcherInterface
     /**
      * Map PUT method router and attach controller to it's pattern (Se GET/POST for example)
      * @param  string $pattern
-     * @param  string|array $controller
+     * @param  string|array|callable $controller
      * @return void
      */
     public function put(string $pattern, $controller): void
@@ -212,7 +212,7 @@ class RouterDispatcher implements RouterDispatcherInterface
     /**
      * Map DELETE method router and attach controller to it's pattern (Se GET/POST for example)
      * @param  string $pattern
-     * @param  string|array $controller
+     * @param  string|array|callable $controller
      * @return void
      */
     public function delete(string $pattern, $controller): void
@@ -223,7 +223,7 @@ class RouterDispatcher implements RouterDispatcherInterface
     /**
      * Create a shell/cli route
      * @param  string $pattern
-     * @param  string|array $controller
+     * @param  string|array|callable $controller
      * @return void
      */
     public function shell(string $pattern, $controller): void
@@ -234,7 +234,7 @@ class RouterDispatcher implements RouterDispatcherInterface
     /**
      * Create a shell/cli route
      * @param  string $pattern
-     * @param  string|array $controller
+     * @param  string|array|callable $controller
      * @return void
      */
     public function cli(string $pattern, $controller): void

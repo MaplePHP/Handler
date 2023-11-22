@@ -26,10 +26,10 @@ class RoutingManager implements RoutingManagerInterface
         $this->setController($controller);
     }
 
-
     /**
      * Sets a valid request Method
-     * @param string|array
+     * @param string|array $method
+     * @return void
      */
     protected function setMethod(string|array $method): void
     {
@@ -47,7 +47,8 @@ class RoutingManager implements RoutingManagerInterface
 
     /**
     * Sets a valid Pattern
-    * @param void
+    * @param string $pattern
+    * @return void
     */
     protected function setPattern(string $pattern): void
     {
@@ -57,17 +58,20 @@ class RoutingManager implements RoutingManagerInterface
     /**
      * Sets a valid request Controller
      * @param string|array|callable $controller
+     * @return void
      */
     protected function setController(string|array|callable $controller): void
     {
-        $_isArr = false;
+        //$_isArr = false;
         if (is_string($controller)) {
             $controller = [$controller];
         }
-        if (!($_isArr = is_array($controller)) && !is_callable($controller)) {
+        /*
+        if (!is_callable($controller)) {
             throw new InvalidArgumentException("Controller needs to be string or array", 1);
         }
-        if ($_isArr && count($controller) <= 0) {
+         */
+        if (is_array($controller) && count($controller) <= 0) {
             throw new InvalidArgumentException("Method array can not be empty", 1);
         }
         $this->controller = $controller;

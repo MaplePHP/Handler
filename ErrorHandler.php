@@ -83,17 +83,19 @@ class ErrorHandler
      * Error handler
      * @param  int         $number  [description]
      * @param  string      $message [description]
-     * @param  string|null $file    [description]
+     * @param  string       $file    [description]
      * @param  int|null    $line    [description]
-     * @param  mixed|null  $context [description]
+     * @param  mixed  $context [description]
      * @return void
      */
-    public function handler(int $number, string $message, ?string $file = null, ?int $line = null, ?mixed $context = null): void
+    public function handler(int $number, string $message, ?string $file = null, ?int $line = null, mixed $context = null): void
     {
         $msg = $this->getMessage($message, $file, $line);
         $hasError = in_array($number, $this->errorLevels);
-        $checksum = crc32($message . basename($file) . $line);
+        $basename = (is_string($file)) ? basename($file) : "";
+        $checksum = crc32($message . $basename . $line);
         $handler = $this->handler;
+
         if (is_callable($handler)) {
             $handler($msg, $number, $hasError, $this->displayError, [$number, $message, $file, $line, $context]);
             if ($this->displayError) {
