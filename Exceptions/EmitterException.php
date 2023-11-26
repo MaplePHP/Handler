@@ -1,6 +1,6 @@
 <?php
 
-namespace PHPFuse\Handler\Exceptions;
+namespace MaplePHP\Handler\Exceptions;
 
 use ErrorException;
 

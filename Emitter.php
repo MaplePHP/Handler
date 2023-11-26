@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace PHPFuse\Handler;
+namespace MaplePHP\Handler;
 
-use PHPFuse\Http\Interfaces\ResponseInterface;
-use PHPFuse\Http\Interfaces\RequestInterface;
-use PHPFuse\Http\Interfaces\StreamInterface;
-use PHPFuse\Handler\Exceptions\EmitterException;
-use PHPFuse\Handler\ErrorHandler;
-use PHPFuse\Container\Interfaces\ContainerInterface;
-use PHPFuse\Output\SwiftRender;
+use MaplePHP\Http\Interfaces\ResponseInterface;
+use MaplePHP\Http\Interfaces\RequestInterface;
+use MaplePHP\Http\Interfaces\StreamInterface;
+use MaplePHP\Handler\Exceptions\EmitterException;
+use MaplePHP\Handler\ErrorHandler;
+use MaplePHP\Container\Interfaces\ContainerInterface;
+use MaplePHP\Output\SwiftRender;
 
 class Emitter
 {
@@ -31,7 +31,7 @@ class Emitter
     {
         $this->container = $container;
         if (!$this->container->has("view")) {
-            $this->container->set("view", '\PHPFuse\Output\SwiftRender');
+            $this->container->set("view", '\MaplePHP\Output\SwiftRender');
             $this->view = $this->container->get("view");
             $this->view->setBuffer("0");
         } else {

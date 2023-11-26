@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace PHPFuse\Handler;
+namespace MaplePHP\Handler;
 
-use PHPFuse\Handler\Interfaces\RoutingManagerInterface;
+use MaplePHP\Handler\Interfaces\RoutingManagerInterface;
 use InvalidArgumentException;
 
 class RoutingManager implements RoutingManagerInterface

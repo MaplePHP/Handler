@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace PHPFuse\Handler;
+namespace MaplePHP\Handler;
 
 class ErrorHandler
 {

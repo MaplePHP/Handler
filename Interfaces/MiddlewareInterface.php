@@ -1,9 +1,9 @@
 <?php
 
-namespace PHPFuse\Handler\Interfaces;
+namespace MaplePHP\Handler\Interfaces;
 
-use PHPFuse\Http\Interfaces\ResponseInterface;
-use PHPFuse\Http\Interfaces\RequestInterface;
+use MaplePHP\Http\Interfaces\ResponseInterface;
+use MaplePHP\Http\Interfaces\RequestInterface;
 
 interface MiddlewareInterface
 {

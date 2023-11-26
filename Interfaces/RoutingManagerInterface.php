@@ -1,6 +1,6 @@
 <?php
 
-namespace PHPFuse\Handler\Interfaces;
+namespace MaplePHP\Handler\Interfaces;
 
 interface RoutingManagerInterface
 {

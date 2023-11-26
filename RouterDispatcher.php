@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace PHPFuse\Handler;
+namespace MaplePHP\Handler;
 
-use PHPFuse\Http\Interfaces\ResponseInterface;
-use PHPFuse\Http\Interfaces\RequestInterface;
-use PHPFuse\Handler\Interfaces\RouterDispatcherInterface;
-use PHPFuse\Handler\Exceptions\EmitterException;
-use PHPFuse\Http\Interfaces\UrlInterface;
-use PHPFuse\Handler\RoutingManager;
-use PHPFuse\Container\Reflection;
-use PHPFuse\Http\Url;
+use MaplePHP\Http\Interfaces\ResponseInterface;
+use MaplePHP\Http\Interfaces\RequestInterface;
+use MaplePHP\Handler\Interfaces\RouterDispatcherInterface;
+use MaplePHP\Handler\Exceptions\EmitterException;
+use MaplePHP\Http\Interfaces\UrlInterface;
+use MaplePHP\Handler\RoutingManager;
+use MaplePHP\Container\Reflection;
+use MaplePHP\Http\Url;
 use FastRoute\Dispatcher;
 use FastRoute\RouteCollector;
 

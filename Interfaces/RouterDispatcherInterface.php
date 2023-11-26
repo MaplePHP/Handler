@@ -1,10 +1,10 @@
 <?php
 
-namespace PHPFuse\Handler\Interfaces;
+namespace MaplePHP\Handler\Interfaces;
 
-use PHPFuse\Http\Interfaces\ResponseInterface;
-use PHPFuse\Http\Interfaces\RequestInterface;
-use PHPFuse\Http\Interfaces\UrlInterface;
+use MaplePHP\Http\Interfaces\ResponseInterface;
+use MaplePHP\Http\Interfaces\RequestInterface;
+use MaplePHP\Http\Interfaces\UrlInterface;
 
 interface RouterDispatcherInterface
 {

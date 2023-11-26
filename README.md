@@ -1,6 +1,6 @@
 
-# PHPFuse - Handler 
-PHPFuse is built upon **nikic/FastRoute**. It is possible you change it with you own preferences, but i do not really see why you would, becouse FastRoute works really great and uses regular expression for advanced users. You can add your routers in "app/Http/Routes/web.php".
+# MaplePHP - Handler 
+MaplePHP is built upon **nikic/FastRoute**. It is possible you change it with you own preferences, but i do not really see why you would, becouse FastRoute works really great and uses regular expression for advanced users. You can add your routers in "app/Http/Routes/web.php".
 
 
 ### Structrue
@@ -66,7 +66,7 @@ $routes->map("CLI","/{page:about}", ['Http\Controllers\Pages', "about"]);
 // Catch a Multiple responses
 $routes->map(["GET", "POST"],"/{page:about}", ['Http\Controllers\Pages', "about"]);
 
-// Take control over all the HTTP request errors (404, 403...). If removed, fuse will generically try to handle the error responses. 
+// Take control over all the HTTP request errors (404, 403...). If removed, MaplePHP will generically try to handle the error responses. 
 $routes->map("*", '[/{any:.*}]', ['Http\Controllers\HttpRequestError', "handleError"]);
 
 // Group 
