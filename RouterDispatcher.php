@@ -127,7 +127,6 @@ class RouterDispatcher implements RouterDispatcherInterface
         }
     }
 
-
     /**
      * The is used to nest group routes
      * The param "Order" here is important.
@@ -307,6 +306,9 @@ class RouterDispatcher implements RouterDispatcherInterface
             if (is_array($routeInfo[1]['controller'])) {
                 $this->dispatchMiddleware(($routeInfo[1]['data'] ?? null), function () use (&$response, $routeInfo) {
                     $select = (isset($routeInfo[1]['controller'])) ? $routeInfo[1]['controller'] : $routeInfo[1];
+                    if(!class_exists($select[0])) {
+                        throw new EmitterException("You have specfied a controller ({$select[0]}) that do not exists in you router file!", 1);
+                    }
                     $reflect = new Reflection($select[0]);
                     $controller = $reflect->dependencyInjector();
 
@@ -392,6 +394,9 @@ class RouterDispatcher implements RouterDispatcherInterface
             foreach ($data as $class) {
                 $classData = $this->getClass($class);
                 if (!isset(self::$middleware[$classData[0]])) {
+                    if(!class_exists($classData[0])) {
+                        throw new EmitterException("You have specfied a middleware ({$classData[0]}) that do not exists in you router file!", 1);
+                    }
                     $reflect = new Reflection($classData[0]);
                     self::$middleware[$classData[0]] = $reflect->dependencyInjector();
                 }
@@ -414,7 +419,7 @@ class RouterDispatcher implements RouterDispatcherInterface
             }
         }
     }
-
+    
     /**
      * Extract class and mthod from argument
      * @param  string|array $classMethod
