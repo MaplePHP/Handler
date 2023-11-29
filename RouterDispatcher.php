@@ -74,9 +74,9 @@ class RouterDispatcher implements RouterDispatcherInterface
         return $this->url;
     }
 
-    public function setUrl(array $param = array())
+    public function setUrl(array $parts = array())
     {
-        return new Url($this->request, $param);
+        return new Url($this->request, $parts);
     }
 
     /**
