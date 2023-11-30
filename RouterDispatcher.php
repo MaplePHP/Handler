@@ -121,7 +121,7 @@ class RouterDispatcher implements RouterDispatcherInterface
         $this->enableCache = $enableCache;
         $dir = dirname($this->routerCacheFile);
 
-        if (!is_writable($dir)) {
+        if ($this->enableCache && !is_writable($dir)) {
             throw new EmitterException("Directory (\"{$dir}/\") is not writable. " .
                 "Could not save \"{$this->routerCacheFile}\" file.", 1);
         }
