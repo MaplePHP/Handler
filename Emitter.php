@@ -144,7 +144,8 @@ class Emitter
         $this->request = $request;
 
         $stream = $this->buildStream();
-        $size = $stream->getSize();
+        // Look for position instead of size, read has already been triggered once
+        $size = $stream->tell();
 
         if ($size) {
             $this->response = $this->response->withHeader('Content-Length', $size);
