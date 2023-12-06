@@ -98,6 +98,11 @@ class RouterDispatcher implements RouterDispatcherInterface
         $this->method = $method;
     }
 
+    public function getMethod(): string
+    {
+        return $this->method;
+    }
+
     /**
      * Set URL router dispatch path
      * @param string $path
