@@ -407,7 +407,16 @@ class RouterDispatcher implements RouterDispatcherInterface
                 }
                 $response = self::$middleware[$classData[0]]->before($this->response, $this->request);
                 if (!is_null($classData[1])) {
-                    $response = self::$middleware[$classData[0]]->{$classData[1]}($this->response, $this->request);
+                    if(is_array($classData[1])) {
+                        foreach($classData[1] as $middlewareMathod) {
+                            $response = self::$middleware[$classData[0]]->{$middlewareMathod}($this->response, $this->request);
+                        }
+
+                    } else {
+                        $response = self::$middleware[$classData[0]]->{$classData[1]}($this->response, $this->request);
+                    }
+
+                    
                 } // Is method set:
                 if ($response instanceof ResponseInterface) {
                     $this->response = $response;
