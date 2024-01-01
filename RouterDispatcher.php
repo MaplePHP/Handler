@@ -395,9 +395,11 @@ class RouterDispatcher implements RouterDispatcherInterface
     protected function dispatchMiddleware(?array $data, $call): void
     {
         //$middleware = array();
+        $customAfter = array();
         if (!is_null($data)) {
             foreach ($data as $class) {
                 $classData = $this->getClass($class);
+
                 if (!isset(self::$middleware[$classData[0]])) {
                     if(!class_exists($classData[0])) {
                         throw new EmitterException("You have specfied a middleware ({$classData[0]}) that do not exists in you router file!", 1);
@@ -405,33 +407,66 @@ class RouterDispatcher implements RouterDispatcherInterface
                     $reflect = new Reflection($classData[0]);
                     self::$middleware[$classData[0]] = $reflect->dependencyInjector();
                 }
-                $response = self::$middleware[$classData[0]]->before($this->response, $this->request);
-                if (!is_null($classData[1])) {
-                    if(is_array($classData[1])) {
-                        foreach($classData[1] as $middlewareMathod) {
-                            $response = self::$middleware[$classData[0]]->{$middlewareMathod}($this->response, $this->request);
-                        }
-
-                    } else {
-                        $response = self::$middleware[$classData[0]]->{$classData[1]}($this->response, $this->request);
-                    }
-
-                    
-                } // Is method set:
-                if ($response instanceof ResponseInterface) {
-                    $this->response = $response;
-                }
+                $response = $this->selectMiddlewareBefore($classData, $customAfter);
             }
         }
         $call(); // Possible controller data
-        if (is_array(self::$middleware)) {
-            foreach (self::$middleware as $m) {
-                $response = $m->after($this->response, $this->request);
-                if ($response instanceof ResponseInterface) {
-                    $this->response = $response;
+        $response = $this->selectMiddlewareAfter($customAfter);
+
+        if ($response instanceof ResponseInterface) {
+            $this->response = $response;
+        }
+    }
+
+    protected function selectMiddlewareBefore(array $classData, array &$customAfter) {
+        $response = self::$middleware[$classData[0]]->before($this->response, $this->request);
+
+        if (!is_null($classData[1])) {
+            if(is_array($classData[1])) {
+                foreach($classData[1] as $beforeAfter => $middlewareMethod) {
+
+                    if(is_array($middlewareMethod)) {
+
+                        foreach($middlewareMethod as $where => $mMethod) {
+                            if($beforeAfter === "before") {
+                                $response = self::$middleware[$classData[0]]->{$mMethod}($this->response, $this->request);
+                            } else {
+                                $customAfter[$classData[0]][] = $mMethod;
+                            }
+                        }
+
+
+                    } else {
+                        $response = self::$middleware[$classData[0]]->{$middlewareMethod}($this->response, $this->request);
+                    }
                 }
+
+            } else {
+                $response = self::$middleware[$classData[0]]->{$classData[1]}($this->response, $this->request);
+            }   
+        }
+        return $response;
+    }
+
+    protected function selectMiddlewareAfter($customAfter) {
+        $response = null;
+        if (is_array(self::$middleware)) {
+            foreach (self::$middleware as $kew => $middlewareInst) {
+                
+                if(isset($customAfter[$kew])) {
+                    if(is_array($customAfter[$kew])) {
+                        foreach($customAfter[$kew] as $customMethod) {
+                            $response = $middlewareInst->{$customMethod}($this->response, $this->request);
+                        }
+                    } else {
+                        $response = $middlewareInst->{$customAfter[$kew]}($this->response, $this->request);
+                    }
+                }
+
+                $response = $middlewareInst->after($this->response, $this->request);
             }
         }
+        return $response;
     }
     
     /**
