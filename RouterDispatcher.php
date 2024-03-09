@@ -110,7 +110,7 @@ class RouterDispatcher implements RouterDispatcherInterface
      */
     public function setDispatchPath(string $path): void
     {
-        $this->dispatchPath = $path;
+        $this->dispatchPath = "/" . ltrim($path, "/");
     }
 
     /**
